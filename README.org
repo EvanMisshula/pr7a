@@ -1,0 +1,112 @@
+Assignment: Building a Multi-Threaded Trading System
+
+* Objective
+
+In this assignment, you will create a simplified trading system that
+simulates real-time trading using multi-threading in C++. The goal is
+to handle different components of a trading system concurrently using
+threads, ensuring safe and efficient processing of data.
+
+Problem Statement:
+
+You are tasked with building a simplified multi-threaded trading
+engine. The engine will handle:
+
+1. Order placement and execution.
+2. Real-time market price updates.
+3. Risk management that monitors positions and limits.
+
+Each component will be handled in a separate thread to simulate the
+concurrent nature of real-world trading systems. The system will run
+for a fixed amount of time, during which it will receive price
+updates, accept orders, and continuously check risk parameters.
+
+Requirements:
+
+1. Order Placement (Thread 1):
+
+- Create a thread that accepts orders (buy or sell) from a user.
+- Orders will be stored in a shared queue (you can use std::queue).
+- Orders can be either market or limit orders.
+- This thread will push orders into the order queue for execution.
+
+2. Market Data Feed (Thread 2):
+
+- Simulate a live feed that updates the market price at random
+  intervals (every 500 milliseconds).
+- This thread should modify the current market price in a thread-safe
+  manner.
+- The market price will be shared with other threads, so you must
+  ensure thread safety using mutex or std::atomic.
+
+3. Order Execution (Thread 3):
+
+- A separate thread should continuously check the order queue and
+  execute orders if conditions are met (e.g., for a market order,
+  execute at current price; for a limit order, execute when price
+  conditions are met).
+- After an order is executed, log the execution details (e.g., order
+  type, price, quantity).
+
+4. Risk Management (Thread 4):
+
+- Continuously monitor the portfolio’s position to ensure no position
+  exceeds a specified limit (e.g., maximum allowed position is 100
+  shares).
+- If a position exceeds the limit, automatically place a market order
+  to reduce the position.
+- Ensure that this thread operates in a safe manner, especially when
+  accessing shared resources like the position.
+
+ 
+
+Further Requirements:
+
+- Thread Safety: Use std::mutex, std::lock_guard, or std::atomic to
+  ensure proper synchronization between threads when accessing shared
+  resources (e.g., order queue, market price, and position data).
+- Thread Communication: Ensure that the order execution thread only
+  processes orders after they are placed by the order placement
+  thread. Use condition variables or similar synchronization
+  primitives if necessary.
+- Graceful Termination: After a fixed duration (e.g., 30 seconds),
+  stop all threads in a controlled manner. Ensure that all pending
+  orders are processed before shutting down.
+
+ 
+
+Sample Execution Flow:
+
+1. The system starts, and the market price begins updating.
+2. A user places buy/sell orders (market or limit) through the
+   console. The orders are added to the queue.
+3. The order execution thread picks up orders and executes them based
+   on the current market price.
+4. The risk management thread monitors the positions and ensures that
+   no positions exceed the predefined risk limits.
+5. After 30 seconds, the system shuts down gracefully, logging all
+   executed orders.
+
+Hints:
+
+- Shared Data Structures: For the order queue and market prices, use
+  appropriate synchronization mechanisms (std::mutex, std::atomic,
+  etc.) to ensure thread safety.
+- Random Market Price Updates: You can use std::this_thread::sleep_for
+  and std::rand() to simulate random market price updates.
+- Thread Management: Use std::thread::join to ensure that all threads
+  finish execution before the program terminates.
+- Graceful Exit: Consider using a boolean flag shared between threads
+  to signal when they should stop.
+
+Expected Output:
+
+- Console interaction where the user can place buy/sell orders.
+- Real-time market price updates visible in the console.
+- Execution logs for each order, showing whether it was a market or
+  limit order, the execution price, and quantity.
+- Risk management adjustments, automatically reducing positions if
+  risk limits are breached.
+
+Bonus Challenges:
+
